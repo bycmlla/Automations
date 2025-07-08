@@ -13,7 +13,7 @@ import shutil
 import tempfile
 import logging
 import os
-from datetime import datetime, timedelta
+import datetime
 from Relatorio_Nestle.treatment_csv_nestle import descompactar_csv
 from Mondial_S_Faturas.envio_wpp_arquivo import send_whatsapp_file
 from cred import ENOVA_SENHA, ENOVA_USUARIO, ENOVA_URL_3500, CONTATOS_ARRAY, CONTATO_01
@@ -113,7 +113,7 @@ def download_file_fiscal():
                 print(f"Erro ao tentar clicar no botão usando XPath relativo ao input: {e2}")
 
         celula_b = WebDriverWait(driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, "//td/div[text()='- Visualiza Notas Fiscais']"))
+            EC.element_to_be_clickable((By.XPATH, "//tr[td/div[text()='Visualiza Notas Fiscais']]"))
         )
         actions = ActionChains(driver)
         actions.double_click(celula_b).perform()
@@ -149,7 +149,7 @@ def download_file_fiscal():
                 EC.element_to_be_clickable((By.XPATH, xpath_relativo_label))
             )
 
-            data_30_dias_atras = (datetime.now() - timedelta(days=30)).strftime("%d/%m/%Y")
+            data_30_dias_atras = (datetime.datetime.now() - datetime.timedelta(days=30)).strftime("%d/%m/%Y")
             campo_data.clear()
             campo_data.send_keys(data_30_dias_atras)
             campo_data.send_keys(Keys.TAB)
@@ -200,7 +200,7 @@ def download_file_fiscal():
         processed_xlsx_path = descompactar_csv(temp_dir)
 
         if processed_xlsx_path:
-            hoje = datetime.now().weekday()
+            hoje = datetime.datetime.now().weekday()
 
             contatos_whatsapp = []
 

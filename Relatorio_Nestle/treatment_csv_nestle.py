@@ -37,7 +37,8 @@ def descompactar_csv(download_dir):
             logging.error(f"Coluna 'CLI_RAZAO_SOCIAL' não encontrada no arquivo CSV.")
             return None
 
-        df_filtrado = df[df["CLI_RAZAO_SOCIAL"].str.lower().str.contains("Relatorio_Nestle", na=False)]
+        df["CLI_RAZAO_SOCIAL"] = df["CLI_RAZAO_SOCIAL"].astype(str).str.strip()
+        df_filtrado = df[df["CLI_RAZAO_SOCIAL"].str.lower().str.contains("nestle", na=False)]
 
         df_filtrado["TCON_DATA_EMISSAO"] = pd.to_datetime(df_filtrado["TCON_DATA_EMISSAO"], dayfirst=True, errors='coerce').dt.date
         df_filtrado["TCON_VALOR_LIQUIDO"] = df_filtrado["TCON_VALOR_LIQUIDO"].astype(str).str.replace('.', '', regex=False).str.replace(',', '.')

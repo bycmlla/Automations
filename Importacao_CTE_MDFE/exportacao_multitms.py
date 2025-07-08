@@ -233,7 +233,7 @@ def download_cte_zip():
         except Exception as e:
             print(f"[DEBUG] Erro ao tentar fechar o driver: {e}")
 
-# download_cte_zip()
+download_cte_zip()
 schedule.every().day.at("07:00").do(download_cte_zip)
 schedule.every().day.at("10:00").do(download_cte_zip)
 

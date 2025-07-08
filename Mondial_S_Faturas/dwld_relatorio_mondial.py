@@ -115,7 +115,7 @@ def access_site():
                 print(f"Erro ao tentar clicar no botão usando XPath relativo ao input: {e2}")
 
         celula_b = WebDriverWait(driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, "//td/div[text()='- Visualiza Notas Fiscais']"))
+            EC.element_to_be_clickable((By.XPATH, "//tr[td/div[text()='Visualiza Notas Fiscais']]"))
         )
         actions = ActionChains(driver)
         actions.double_click(celula_b).perform()
@@ -153,7 +153,7 @@ def access_site():
             print(f"Erro ao tentar clicar no botão 'Selecionar Grupo Cliente': {e}")
 
         elemento_selecionar = WebDriverWait(driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, "//td/div[text()='- Selecionar']"))
+            EC.element_to_be_clickable((By.XPATH, "//td[contains(., 'Selecionar')]"))
         )
         actions = ActionChains(driver)
         actions.double_click(elemento_selecionar).perform()
@@ -251,7 +251,7 @@ def access_site():
         print("Baixando Nestlé")
         download_file_fiscal()
 
-# access_site()
+access_site()
 
 schedule.every().day.at("10:30").do(access_site)
 
