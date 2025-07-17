@@ -250,10 +250,9 @@ def access_site():
         shutil.rmtree(temp_dir, ignore_errors=True)
         print("Baixando Nestlé")
         download_file_fiscal()
-
 access_site()
 
-schedule.every().day.at("10:30").do(access_site)
+schedule.every().day.at("23:00").do(access_site)
 
 while True:
     schedule.run_pending()

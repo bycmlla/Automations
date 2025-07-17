@@ -9,7 +9,7 @@ from cred import ENOVA_USUARIO, ENOVA_URL_3500, ENOVA_SENHA, ENOVA_URL_3600
 
 def importacao_enova(driver, temp_dir):
     # driver.get(ENOVA_URL_3600)
-    driver.get(ENOVA_URL_3500)
+    driver.get(ENOVA_URL_3600)
 
     WebDriverWait(driver, 10).until(
         EC.frame_to_be_available_and_switch_to_it((By.ID, "component-1009"))
@@ -90,7 +90,7 @@ def importacao_enova(driver, temp_dir):
     )
     botao_upload.click()
 
-    time.sleep(5)
+    time.sleep(15)
 
     marca_todos = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable(

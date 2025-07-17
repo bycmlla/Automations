@@ -87,9 +87,11 @@ def send_whatsapp_file(file_path, contact_names):
 
                 time.sleep(2)
 
+                print("01")
+
                 plus_button_location = None
                 for i in range(5):
-                    plus_button_location = pyautogui.locateCenterOnScreen("plus.png", confidence=0.9)
+                    plus_button_location = pyautogui.locateCenterOnScreen("plusBlack.png", confidence=0.9)
                     if plus_button_location:
                         break
                     time.sleep(1)

@@ -141,13 +141,16 @@ def download_cte_zip():
         """, input_data, data_ontem_str)
 
         time.sleep(5)
+        print("01")
 
         botao_pesquisar = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn.btn-primary[data-bind*='Pesquisar.eventClick']"))
         )
         botao_pesquisar.click()
 
-        time.sleep(4)
+        print("02")
+
+        time.sleep(10)
 
         botao_download = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
