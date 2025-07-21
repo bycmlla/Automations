@@ -10,6 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import pyautogui
 from cred import OK_ENTREGA_URL, OK_ENTREGA_SENHA, OK_ENTREGA_USUARIO
+from datetime import datetime
 
 
 def filtro_ok_entrega():
@@ -97,41 +98,81 @@ def filtro_ok_entrega():
 
         intermediario_link.click()
 
-        timeout = 10
-        start_time = time.time()
-        selecionar_btn = None
+        time.sleep(1)
 
-        while time.time() - start_time < timeout:
-            selecionar_btn = pyautogui.locateOnScreen("selecionar.png", confidence=0.8)
-            if selecionar_btn:
-                pyautogui.click(selecionar_btn)
-                print("Cliquei no botão Selecionar.")
-                break
-            time.sleep(0.5)
+        area = pyautogui.locateOnScreen('area-elemento.png', confidence=0.8)
+        if area:
+            print("Área encontrada:", area)
 
-        if not selecionar_btn:
-            print("Botão Selecionar não encontrado na tela.")
+            campo = pyautogui.locateOnScreen('selecione-campo.png', region=area, confidence=0.8)
 
-        opcao = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//li[@class='option' and text()='Emissão NF']")))
-        opcao.click()
+            if campo:
+                print("Campo 'Selecione' encontrado:", campo)
+                pyautogui.click(campo)
+            else:
+                print("Campo 'Selecione' não encontrado.")
+        else:
+            print("Área do elemento não encontrada.")
 
+        item_emissao = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, "//li[@data-value='emissao']"))
+        )
+        item_emissao.click()
 
-        # campo_data = WebDriverWait(driver, 10).until(
-        #     EC.element_to_be_clickable((By.XPATH, '//input[@placeholder="Selecione a data de entrega"]'))
-        # )
-        #
-        # campo_data.clear()
-        # campo_data.send_keys("01/01/2025")
+        time.sleep(1)
 
+        area_periodo = pyautogui.locateOnScreen('periodo-area.png', confidence=0.8)
+        if area:
+            print("Área encontrada:", area_periodo)
 
+            campo_periodo = pyautogui.locateOnScreen('periodo-campo.png', region=area_periodo, confidence=0.8)
+
+            if campo_periodo:
+                print("Campo 'Periodo' encontrado:", campo_periodo)
+                pyautogui.click(campo_periodo)
+            else:
+                print("Campo 'Periodo' não encontrado.")
+        else:
+            print("Área do elemento não encontrada.")
+
+        time.sleep(1)
+
+        data_especifica = WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, "//li[text()='Data Específica']"))
+        )
+        data_especifica.click()
+
+        time.sleep(1)
+        data_hoje = datetime.today().strftime("%d/%m/%Y")
+        intervalo_data = f"01/01/2025 - {data_hoje}"
+
+        campo_data = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "issueSpecificDate"))
+        )
+
+        campo_data.clear()
+        campo_data.send_keys(intervalo_data)
+
+        try:
+            botao_fechar = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, ".iziToast.iziToast-opened .iziToast-close"))
+            )
+            botao_fechar.click()
+        except:
+            print("Toast não apareceu ou já sumiu.")
+
+        time.sleep(2)
+
+        botao_filtrar = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "a.filtrar_action.bt_filtrar"))
+        )
+        botao_filtrar.click()
 
     except Exception as e:
         print(f"Erro durante a execução: {e}")
     finally:
         time.sleep(3)
         driver.quit()
-
 
 filtro_ok_entrega()
 schedule.every().day.at("07:30").do(filtro_ok_entrega)

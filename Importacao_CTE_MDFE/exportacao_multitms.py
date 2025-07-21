@@ -94,7 +94,7 @@ def download_cte_zip():
         usuario = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "Usuario"))
         )
-
+        usuario.screenshot("Abriu_funcao.png")
         usuario.send_keys(MULTICTE_USUARIO)
 
         senha = WebDriverWait(driver, 10).until(
@@ -236,7 +236,7 @@ def download_cte_zip():
         except Exception as e:
             print(f"[DEBUG] Erro ao tentar fechar o driver: {e}")
 
-download_cte_zip()
+# download_cte_zip()
 schedule.every().day.at("07:00").do(download_cte_zip)
 schedule.every().day.at("10:00").do(download_cte_zip)
 
