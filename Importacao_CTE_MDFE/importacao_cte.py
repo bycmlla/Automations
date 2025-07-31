@@ -51,6 +51,7 @@ def importacao_enova(driver, temp_dir):
 
         except Exception as e2:
             print(f"Falha também com ActionChains: {e2}")
+    time.sleep(3)
 
     edi_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()='EDI']"))

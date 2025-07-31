@@ -63,15 +63,17 @@ def access_site():
         )
         password.send_keys(ENOVA_SENHA)
 
+        time.sleep(3)
+
         connect_button = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "btnconfirmar"))
+            EC.element_to_be_clickable((By.ID, "btnconfirmar"))
         )
         connect_button.click()
 
         driver.switch_to.default_content()
 
         try:
-            time.sleep(2)
+            time.sleep(5)
             gestao_fiscal_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "//span[text()='5 Gestão Fiscal/Contábil']/ancestor::a[1]"))
             )
@@ -97,6 +99,8 @@ def access_site():
         )
         elemento_relatorio.click()
 
+        time.sleep(5)
+
         try:
             time.sleep(3)
             xpath_relativo = "//label[normalize-space(text())='Lay Out']/preceding-sibling::a[contains(@class, 'x-btn-icon')][1]"
@@ -113,14 +117,14 @@ def access_site():
                 botao_layout.click()
             except Exception as e2:
                 print(f"Erro ao tentar clicar no botão usando XPath relativo ao input: {e2}")
-
+        time.sleep(3)
         celula_b = WebDriverWait(driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, "//tr[td/div[text()='Visualiza Notas Fiscais']]"))
         )
         actions = ActionChains(driver)
         actions.double_click(celula_b).perform()
 
-        time.sleep(2)
+        time.sleep(4)
 
         xpath_checkboxes_para_desmarcar = "//label[normalize-space(text())='Cancelados']/following-sibling::div[contains(@class,'x-grid')][1]//tr[.//td/div[normalize-space(text())='Sim']]//img[contains(@class, 'x-grid-checkcolumn-checked')]"
 
@@ -152,8 +156,9 @@ def access_site():
         except Exception as e:
             print(f"Erro ao tentar clicar no botão 'Selecionar Grupo Cliente': {e}")
 
+        time.sleep(5)
         elemento_selecionar = WebDriverWait(driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, "//td[contains(., 'Selecionar')]"))
+            EC.element_to_be_clickable((By.XPATH, "//td/div[normalize-space(text())='Selecionar']"))
         )
         actions = ActionChains(driver)
         actions.double_click(elemento_selecionar).perform()
@@ -194,7 +199,7 @@ def access_site():
         except Exception as e:
             print(f"Erro ao tentar clicar no botão 'Consultar': {e}")
 
-        WebDriverWait(driver, 40).until(lambda d: len(d.window_handles) > 1)
+        WebDriverWait(driver, 60).until(lambda d: len(d.window_handles) > 1)
 
         aba_original = driver.current_window_handle
         for aba in driver.window_handles:
@@ -224,7 +229,11 @@ def access_site():
 
         processed_xlsx_path = treatment_csv(temp_dir)
 
+
+
         if processed_xlsx_path:
+            time.sleep(2)
+            driver.quit()
             hoje = datetime.datetime.now().weekday()
 
             contatos_whatsapp = []
@@ -246,15 +255,18 @@ def access_site():
         print(f"Erro durante a execução: {e}")
     finally:
         time.sleep(3)
-        driver.quit()
         shutil.rmtree(temp_dir, ignore_errors=True)
         print("Baixando Nestlé")
         download_file_fiscal()
+
+
 access_site()
 
-schedule.every().day.at("23:00").do(access_site)
+schedule.every().day.at("10:30").do(access_site)
 
 while True:
     schedule.run_pending()
     print("Aguardando para ENVIO")
-    time.sleep(1)
+    time.sleep(5)
+    print("\U0001F680")
+    time.sleep(5)

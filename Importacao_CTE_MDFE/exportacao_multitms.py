@@ -30,7 +30,7 @@ def aguardar_download(download_dir, nome_arquivo, timeout=30):
 
     raise TimeoutError(f"Download do arquivo {nome_arquivo} não finalizou em tempo hábil.")
 
-def verificar_importacao_cte(driver, timeout=120):
+def verificar_importacao_cte(driver, timeout=200):
     inicio = time.time()
     while time.time() - inicio < timeout:
         elementos = driver.find_elements(By.XPATH, "//div[contains(text(), 'C:\\Enova\\cache\\enovaerp')]")
@@ -39,7 +39,7 @@ def verificar_importacao_cte(driver, timeout=120):
         time.sleep(2)
     return False
 
-def verificar_importacao_mdfe(driver, timeout=180):
+def verificar_importacao_mdfe(driver, timeout=200):
     mensagens_esperadas = [
         "IMPORTADO COM SUCESSO",
         "ARQUIVO CORROMPIDO",
@@ -150,7 +150,7 @@ def download_cte_zip():
 
         print("02")
 
-        time.sleep(10)
+        time.sleep(20)
 
         botao_download = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
@@ -236,7 +236,9 @@ def download_cte_zip():
         except Exception as e:
             print(f"[DEBUG] Erro ao tentar fechar o driver: {e}")
 
-# download_cte_zip()
+
+download_cte_zip()
+
 schedule.every().day.at("07:00").do(download_cte_zip)
 schedule.every().day.at("10:00").do(download_cte_zip)
 
@@ -244,4 +246,6 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         print("Aguardando para importar!")
-        time.sleep(1)
+        time.sleep(5)
+        print("\U0001F40D")
+        time.sleep(5)

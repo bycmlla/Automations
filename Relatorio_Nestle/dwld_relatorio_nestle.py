@@ -60,7 +60,7 @@ def download_file_fiscal():
             EC.presence_of_element_located((By.NAME, "Password"))
         )
         password.send_keys(ENOVA_SENHA)
-
+        time.sleep(3)
         connect_button = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "btnconfirmar"))
         )

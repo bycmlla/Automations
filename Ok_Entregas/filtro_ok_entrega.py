@@ -84,7 +84,7 @@ def filtro_ok_entrega():
             EC.invisibility_of_element_located((By.ID, "alertModalAviso"))
         )
 
-        time.sleep(5)
+        time.sleep(3)
 
         filtro_btn = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "a.nav-link.bell-link"))
@@ -174,10 +174,14 @@ def filtro_ok_entrega():
         time.sleep(3)
         driver.quit()
 
+
 filtro_ok_entrega()
+
 schedule.every().day.at("07:30").do(filtro_ok_entrega)
 
 while True:
     schedule.run_pending()
-    print("Wait to filter! \U0001F600")
-    time.sleep(1)
+    print("Wait to filter!")
+    time.sleep(5)
+    print(" \U0001F600")
+    time.sleep(5)

@@ -73,10 +73,6 @@ def descompactar_csv(download_dir):
         nome_saida_csv = os.path.join(download_dir, "filtrado_nestle.csv")
         df_filtrado.to_csv(nome_saida_csv, sep=";", index=False, encoding="utf-8-sig")
 
-        download_dir_user = os.path.join(os.path.expanduser("~"), "Downloads")
-        shutil.copy(nome_arquivo_excel, os.path.join(download_dir_user, os.path.basename(nome_arquivo_excel)))
-        shutil.copy(nome_saida_csv, os.path.join(download_dir_user, "filtrado_nestle.csv"))
-
         return nome_arquivo_excel
 
     except zipfile.BadZipFile:

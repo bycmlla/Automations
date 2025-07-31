@@ -189,9 +189,12 @@ def segundo_acesso_():
         print("Diretório temporário com o arquivo:", temp_dir)
 
 segundo_acesso_()
+
 schedule.every().day.at("07:55").do(segundo_acesso_)
 
 while True:
     schedule.run_pending()
-    print("Wait download!")
-    time.sleep(1)
+    print("Aguardando Download!!!")
+    time.sleep(5)
+    print("\U0001F9E0")
+

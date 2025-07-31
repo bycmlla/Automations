@@ -8,7 +8,7 @@ from cred import ENOVA_USUARIO, ENOVA_URL_3500, ENOVA_URL_3600, ENOVA_SENHA
 
 def importacao_mdfe(driver, temp_dir):
     # driver.get(ENOVA_URL_3600)
-    driver.get(ENOVA_URL_3500)
+    driver.get(ENOVA_URL_3600)
 
 
     WebDriverWait(driver, 10).until(
@@ -48,6 +48,7 @@ def importacao_mdfe(driver, temp_dir):
             actions.move_to_element(span_element).click().perform()
         except Exception as e2:
             print(f"Falha também com ActionChains: {e2}")
+    time.sleep(3)
 
     edi_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()='EDI']"))
