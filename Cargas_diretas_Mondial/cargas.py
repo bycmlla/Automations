@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
 from openpyxl import load_workbook
+from openpyxl.styles import Border, Side
 from google.oauth2.service_account import Credentials
 import gspread
 import os
@@ -34,14 +35,33 @@ if df_filtrado.empty:
     print("Nenhum dado encontrado para ontem.")
 else:
     caminho_arquivo_destino = r"\\server\JTDTRANSPORTES2\ANALITCS\ACOMPANHAMENTO DE CARGAS\CARGAS DIRETA - MONDIAL.xlsx"
+    sheet_name = 'Cargas'
 
     book = load_workbook(caminho_arquivo_destino)
-    sheet_name = 'Cargas'
     sheet_destino = book[sheet_name]
 
     ultima_linha = sheet_destino.max_row
 
-    with pd.ExcelWriter(caminho_arquivo_destino, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
-        df_filtrado.to_excel(writer, index=False, header=False, sheet_name=sheet_name, startrow=ultima_linha)
+    for index, row in df_filtrado.iterrows():
+        sheet_destino.append(list(row))
 
-    print(f"{len(df_filtrado)} linha(s) adicionada(s) na planilha de destino.")
+    border = Border(left=Side(style='thin', color='000000'),
+                    right=Side(style='thin', color='000000'),
+                    top=Side(style='thin', color='000000'),
+                    bottom=Side(style='thin', color='000000'))
+
+    # Calculate the range for the newly added data
+    num_linhas_adicionadas = len(df_filtrado)
+    primeira_linha_nova = ultima_linha + 1
+    ultima_linha_nova = primeira_linha_nova + num_linhas_adicionadas - 1
+    num_colunas = len(df_filtrado.columns)
+
+    for row in sheet_destino.iter_rows(min_row=primeira_linha_nova, max_row=ultima_linha_nova, min_col=1,
+                                       max_col=num_colunas):
+        for cell in row:
+            cell.border = border
+
+    book.save(caminho_arquivo_destino)
+
+    print(f"{num_linhas_adicionadas} linha(s) adicionada(s) na planilha de destino.")
+    print("Bordas adicionadas aos novos dados.")

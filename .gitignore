@@ -11,4 +11,4 @@ build/
 cred.py
 .DS_Store
 Thumbs.db
-./Cargas_diretas_Mondial/credenciais.json
+Cargas_diretas_Mondial/credenciais.json
