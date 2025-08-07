@@ -260,7 +260,7 @@ def access_site():
         download_file_fiscal()
 
 
-access_site()
+# access_site()
 
 schedule.every().day.at("10:30").do(access_site)
 

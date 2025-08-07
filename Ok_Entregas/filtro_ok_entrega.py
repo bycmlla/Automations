@@ -175,7 +175,7 @@ def filtro_ok_entrega():
         driver.quit()
 
 
-filtro_ok_entrega()
+# filtro_ok_entrega()
 
 schedule.every().day.at("07:30").do(filtro_ok_entrega)
 

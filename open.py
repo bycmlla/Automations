@@ -6,8 +6,8 @@ import time
 
 def abrir_whatsapp_web():
     options = Options()
-    options.add_argument(r"user-data-dir=C:\\ChromeSelenium")  # Caminho onde o Chrome armazena o perfil
-    options.add_argument("profile-directory=Profile1")         # Nome do perfil
+    options.add_argument(r"user-data-dir=C:\\ChromeSelenium")
+    options.add_argument("profile-directory=Profile1")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")

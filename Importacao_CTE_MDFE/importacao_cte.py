@@ -11,6 +11,8 @@ def importacao_enova(driver, temp_dir):
     # driver.get(ENOVA_URL_3600)
     driver.get(ENOVA_URL_3600)
 
+    driver.maximize_window()
+
     WebDriverWait(driver, 10).until(
         EC.frame_to_be_available_and_switch_to_it((By.ID, "component-1009"))
     )
@@ -59,23 +61,40 @@ def importacao_enova(driver, temp_dir):
     actions = ActionChains(driver)
     actions.move_to_element(edi_button).perform()
 
+    print("dentro do cte 01")
+
     importar_doc_proprio = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()='Importar Documentos Próprio']"))
     )
     actions = ActionChains(driver)
     actions.move_to_element(importar_doc_proprio).perform()
+    print("dentro do cte 02")
 
     cte_eletronico = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//span[text()='Conhecimento de Transporte Eletrônico']"))
     )
     cte_eletronico.click()
+    print("dentro do cte 03")
 
     time.sleep(2)
 
-    carregar_arquivo = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//span[text()='Carregar Arquivo']/ancestor::a[1]"))
+    carregar = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//a[.//span[contains(text(), 'Carregar Arquivo')]]"))
     )
-    carregar_arquivo.click()
+
+    carregar.screenshot("loadButton.png")
+
+    carregar.click()
+
+    # carregar = pyautogui.locateOnScreen('carregar_arquivo.png', confidence=0.9)
+    # print("dentro do cte 04")
+    # if carregar:
+    #     centro = pyautogui.center(carregar)
+    #     pyautogui.moveTo(centro)
+    #     pyautogui.click()
+    # else:
+    #     print("Botão não encontrado na tela.")
+
 
     caminho_arquivo = os.path.join(temp_dir, "LoteXML_01.zip")
 

@@ -90,6 +90,7 @@ def download_cte_zip():
     driver = webdriver.Chrome(service=service, options=options)
     try:
         driver.get(MULTICTE_URL)
+        driver.maximize_window()
 
         usuario = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "Usuario"))
@@ -150,7 +151,7 @@ def download_cte_zip():
 
         print("02")
 
-        time.sleep(20)
+        time.sleep(5)
 
         botao_download = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(

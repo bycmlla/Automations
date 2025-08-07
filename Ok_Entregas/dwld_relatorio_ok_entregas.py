@@ -188,7 +188,7 @@ def segundo_acesso_():
         print("Driver encerrado.")
         print("Diretório temporário com o arquivo:", temp_dir)
 
-segundo_acesso_()
+# segundo_acesso_()
 
 schedule.every().day.at("07:55").do(segundo_acesso_)
 
