@@ -267,6 +267,6 @@ schedule.every().day.at("10:30").do(access_site)
 while True:
     schedule.run_pending()
     print("Aguardando para ENVIO")
-    time.sleep(5)
+    time.sleep(60)
     print("\U0001F680")
-    time.sleep(5)
+    time.sleep(60)

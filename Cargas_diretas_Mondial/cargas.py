@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 from datetime import datetime, timedelta
 from openpyxl import load_workbook
@@ -5,63 +6,72 @@ from openpyxl.styles import Border, Side
 from google.oauth2.service_account import Credentials
 import gspread
 import os
+import schedule
 
-print(os.path.isfile("credenciais.json"))
-print(os.path.getsize("credenciais.json"))
 
-scopes = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
+def access_api():
+    print(os.path.isfile("credenciais.json"))
+    print(os.path.getsize("credenciais.json"))
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
 
-credentials = Credentials.from_service_account_file("credenciais.json", scopes=scopes)
-client = gspread.authorize(credentials)
+    credentials = Credentials.from_service_account_file("credenciais.json", scopes=scopes)
+    client = gspread.authorize(credentials)
 
-spreadsheet = client.open("MONITORAMENTO JTD")
+    spreadsheet = client.open("MONITORAMENTO JTD")
 
-hoje = datetime.today()
-nome_aba = hoje.strftime("%d/%m/%Y")
-sheet = spreadsheet.worksheet(nome_aba)
+    hoje = datetime.today()
+    nome_aba = hoje.strftime("%d/%m/%Y")
+    sheet = spreadsheet.worksheet(nome_aba)
 
-data = sheet.get_all_records()
-df = pd.DataFrame(data)
+    data = sheet.get_all_records()
+    df = pd.DataFrame(data)
 
-ontem = hoje - timedelta(days=1)
-data_ontem = ontem.strftime("%d/%m/%Y")
+    ontem = hoje - timedelta(days=1)
+    data_ontem = ontem.strftime("%d/%m/%Y")
 
-df_filtrado = df[df['Data_expedicao'] == data_ontem]
+    df_filtrado = df[df['Data_expedicao'] == data_ontem]
 
-if df_filtrado.empty:
-    print("Nenhum dado encontrado para ontem.")
-else:
-    caminho_arquivo_destino = r"\\server\JTDTRANSPORTES2\ANALITCS\ACOMPANHAMENTO DE CARGAS\CARGAS DIRETA - MONDIAL.xlsx"
-    sheet_name = 'Cargas'
+    if df_filtrado.empty:
+        print("Nenhum dado encontrado para ontem.")
+    else:
+        caminho_arquivo_destino = r"\\server\JTDTRANSPORTES2\ANALITCS\ACOMPANHAMENTO DE CARGAS\CARGAS DIRETA - MONDIAL.xlsx"
+        sheet_name = 'Cargas'
 
-    book = load_workbook(caminho_arquivo_destino)
-    sheet_destino = book[sheet_name]
+        book = load_workbook(caminho_arquivo_destino)
+        sheet_destino = book[sheet_name]
 
-    ultima_linha = sheet_destino.max_row
+        ultima_linha = sheet_destino.max_row
 
-    for index, row in df_filtrado.iterrows():
-        sheet_destino.append(list(row))
+        for index, row in df_filtrado.iterrows():
+            sheet_destino.append(list(row))
 
-    border = Border(left=Side(style='thin', color='000000'),
-                    right=Side(style='thin', color='000000'),
-                    top=Side(style='thin', color='000000'),
-                    bottom=Side(style='thin', color='000000'))
+        border = Border(left=Side(style='thin', color='000000'),
+                        right=Side(style='thin', color='000000'),
+                        top=Side(style='thin', color='000000'),
+                        bottom=Side(style='thin', color='000000'))
 
-    # Calculate the range for the newly added data
-    num_linhas_adicionadas = len(df_filtrado)
-    primeira_linha_nova = ultima_linha + 1
-    ultima_linha_nova = primeira_linha_nova + num_linhas_adicionadas - 1
-    num_colunas = len(df_filtrado.columns)
+        num_linhas_adicionadas = len(df_filtrado)
+        primeira_linha_nova = ultima_linha + 1
+        ultima_linha_nova = primeira_linha_nova + num_linhas_adicionadas - 1
+        num_colunas = len(df_filtrado.columns)
 
-    for row in sheet_destino.iter_rows(min_row=primeira_linha_nova, max_row=ultima_linha_nova, min_col=1,
-                                       max_col=num_colunas):
-        for cell in row:
-            cell.border = border
+        for row in sheet_destino.iter_rows(min_row=primeira_linha_nova, max_row=ultima_linha_nova, min_col=1,
+                                           max_col=num_colunas):
+            for cell in row:
+                cell.border = border
 
-    book.save(caminho_arquivo_destino)
+        book.save(caminho_arquivo_destino)
 
-    print(f"{num_linhas_adicionadas} linha(s) adicionada(s) na planilha de destino.")
-    print("Bordas adicionadas aos novos dados.")
+        print(f"{num_linhas_adicionadas} linha(s) adicionada(s) na planilha de destino.")
+
+schedule.every().day.at("09:00").do(access_api)
+
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+    print("\U0001F550")
+    time.sleep(60)
+    print("Acessarei a API, confia!")
